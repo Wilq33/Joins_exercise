@@ -42,3 +42,106 @@ mysql> INSERT INTO papers (student_id, title, grade ) VALUES
     -> (4, 'Borges and Magical Realism', 89);
 Query OK, 5 rows affected (0.00 sec)
 Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM students;
++----+------------+
+| id | first_name |
++----+------------+
+|  1 | Caleb      |
+|  2 | Samantha   |
+|  3 | Raj        |
+|  4 | Carlos     |
+|  5 | Lisa       |
++----+------------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * from papers;
++---------------------------------------+-------+------------+
+| title                                 | grade | student_id |
++---------------------------------------+-------+------------+
+| My First Book Report                  |    60 |          1 |
+| My Second Book Report                 |    75 |          1 |
+| Russian Lit Through The Ages          |    94 |          2 |
+| De Montaigne and The Art of The Essay |    98 |          2 |
+| Borges and Magical Realism            |    89 |          4 |
++---------------------------------------+-------+------------+
+5 rows in set (0.00 sec)
+
+-- 1st task
+
+SELECT first_name,title,grade FROM students
+    -> JOIN papers
+    -> ON students.id = papers.student_id
+    -> ORDER BY grade DESC;
++------------+---------------------------------------+-------+
+| first_name | title                                 | grade |
++------------+---------------------------------------+-------+
+| Samantha   | De Montaigne and The Art of The Essay |    98 |
+| Samantha   | Russian Lit Through The Ages          |    94 |
+| Carlos     | Borges and Magical Realism            |    89 |
+| Caleb      | My Second Book Report                 |    75 |
+| Caleb      | My First Book Report                  |    60 |
++------------+---------------------------------------+-------+
+5 rows in set (0.00 sec)
+
+-- 2nd task
+
+mysql> SELECT first_name, title, grade FROM students
+    -> LEFT JOIN papers
+    -> ON students.id = papers.student_id; 
++------------+---------------------------------------+-------+
+| first_name | title                                 | grade |
++------------+---------------------------------------+-------+
+| Caleb      | My First Book Report                  |    60 |
+| Caleb      | My Second Book Report                 |    75 |
+| Samantha   | Russian Lit Through The Ages          |    94 |
+| Samantha   | De Montaigne and The Art of The Essay |    98 |
+| Raj        | NULL                                  |  NULL |
+| Carlos     | Borges and Magical Realism            |    89 |
+| Lisa       | NULL                                  |  NULL |
++------------+---------------------------------------+-------+
+7 rows in set (0.00 sec)
+
+--3rd task
+
+mysql> SELECT 
+    -> first_name,
+    -> IFNULL(title, 'MISSING') AS 'title',
+    -> IFNULL(grade, 0) AS 'grade'
+    -> FROM students
+    -> LEFT JOIN papers
+    -> ON students.id = papers.student_id; 
++------------+---------------------------------------+-------+
+| first_name | title                                 | grade |
++------------+---------------------------------------+-------+
+| Caleb      | My First Book Report                  |    60 |
+| Caleb      | My Second Book Report                 |    75 |
+| Samantha   | Russian Lit Through The Ages          |    94 |
+| Samantha   | De Montaigne and The Art of The Essay |    98 |
+| Raj        | MISSING                               |     0 |
+| Carlos     | Borges and Magical Realism            |    89 |
+| Lisa       | MISSING                               |     0 |
++------------+---------------------------------------+-------+
+7 rows in set (0.00 sec)
+
+-- 4th task
+
+mysql> SELECT 
+    -> first_name,
+    -> IFNULL(AVG(grade), 0) AS 'average'
+    -> FROM students 
+    -> LEFT JOIN papers
+    -> ON students.id = papers.student_id
+    -> GROUP BY first_name
+    -> ORDER BY grade DESC;
++------------+---------+
+| first_name | average |
++------------+---------+
+| Samantha   | 96.0000 |
+| Carlos     | 89.0000 |
+| Caleb      | 67.5000 |
+| Raj        |  0.0000 |
+| Lisa       |  0.0000 |
++------------+---------+
+5 rows in set (0.00 sec)
+
