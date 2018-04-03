@@ -133,7 +133,7 @@ mysql> SELECT
     -> LEFT JOIN papers
     -> ON students.id = papers.student_id
     -> GROUP BY first_name
-    -> ORDER BY grade DESC;
+    -> ORDER BY average DESC;
 +------------+---------+
 | first_name | average |
 +------------+---------+
@@ -145,3 +145,27 @@ mysql> SELECT
 +------------+---------+
 5 rows in set (0.00 sec)
 
+-- 5th task
+
+mysql> SELECT 
+    -> first_name,
+    -> IFNULL(AVG(grade), 0) AS 'average',
+    -> CASE
+    -> WHEN AVG(grade) >= 75 THEN 'PASSSING'
+    -> ELSE 'FAILING'
+    -> END AS passing_status
+    -> FROM students
+    -> LEFT JOIN papers
+    -> ON students.id = papers.student_id
+    -> GROUP BY first_name
+    -> ORDER BY average DESC;
++------------+---------+----------------+
+| first_name | average | passing_status |
++------------+---------+----------------+
+| Samantha   | 96.0000 | PASSSING       |
+| Carlos     | 89.0000 | PASSSING       |
+| Caleb      | 67.5000 | FAILING        |
+| Lisa       |  0.0000 | FAILING        |
+| Raj        |  0.0000 | FAILING        |
++------------+---------+----------------+
+5 rows in set (0.00 sec)
